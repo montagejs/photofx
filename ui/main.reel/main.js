@@ -34,9 +34,14 @@ var Montage = require("montage").Montage,
     Serializer = require("montage/core/serializer").Serializer,
     Deserializer = require("montage/core/deserializer").Deserializer,
     defaultUndoManager = require("montage/core/undo-manager").defaultUndoManager,
-    defaultLocalizer = require("montage/core/localizer").defaultLocalizer,
     ArrayController = require("montage/ui/controller/array-controller").ArrayController,
     LOCAL_STORAGE_KEY = "montage_photofx_state";
+
+var localizer = require("montage/core/localizer"),
+    defaultLocalizer = localizer.defaultLocalizer,
+    _ = localizer.localize;
+
+var add_photo_name, remove_photo_name;
 
 exports.Main = Montage.create(Component, {
 
@@ -46,6 +51,9 @@ exports.Main = Montage.create(Component, {
             this.photoController = ArrayController.create();
 
             this._loadPhotos();
+
+            this.localizer = defaultLocalizer;
+            this.waitForLocalizerMessages = true;
         }
     },
 
@@ -122,6 +130,8 @@ exports.Main = Montage.create(Component, {
 
     prepareForDraw: {
         value: function() {
+            add_photo_name = _("add_photo_name");
+            remove_photo_name = _("remove_photo_name");
 
             document.addEventListener("mousedown", this, false);
 
@@ -340,7 +350,7 @@ exports.Main = Montage.create(Component, {
         value: function(index) {
 
             var photo = this.photoController.content[index];
-            var undoLabel = 'remove photo "' + photo.title + '"';
+            var undoLabel = remove_photo_name({name: photo.title});
 
             this.undoManager.add(undoLabel, this.addPhotoAtIndex, this, photo, index);
 
@@ -351,7 +361,7 @@ exports.Main = Montage.create(Component, {
     addPhotoAtIndex: {
         value: function(photo, index) {
 
-            var undoLabel = 'add photo "' + photo.title + '"';
+            var undoLabel = add_photo_name({name: photo.title});
 
             this.undoManager.add(undoLabel, this.removePhotoAtIndex, this, index);
 
