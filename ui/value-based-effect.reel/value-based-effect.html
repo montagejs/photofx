@@ -41,12 +41,14 @@ POSSIBILITY OF SUCH DAMAGE.
                 "prototype": "montage/ui/toggle-button.reel",
                 "properties": {
                     "element": {"#": "toggle"},
-                    "pressedClass": "success",
-                    "pressedLabel": "ON",
-                    "unpressedLabel": "OFF"
+                    "pressedClass": "success"
                 },
                 "bindings": {
                     "pressed": {"<->": "@owner.enabled"}
+                },
+                "localizations": {
+                    "unpressedLabel": {"_": "off"},
+                    "pressedLabel": {"_": "on"}
                 }
             },
             "valueSlider": {

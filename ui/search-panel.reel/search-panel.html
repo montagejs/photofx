@@ -66,6 +66,9 @@ POSSIBILITY OF SUCH DAMAGE.
                 "prototype": "montage/ui/button.reel",
                 "properties": {
                     "element": {"#": "searchButton"}
+                },
+                "localizations": {
+                    "label": {"_": "search"}
                 }
             },
 
@@ -87,8 +90,17 @@ POSSIBILITY OF SUCH DAMAGE.
                     "result": {"<-": "@searchResultsList.objectAtCurrentIteration"},
                     "photoListController": {"<-": "@owner.photoListController"}
                 }
-            }
+            },
 
+            "searchingLabel": {
+                "prototype": "montage/ui/dynamic-text.reel",
+                "properties": {
+                    "element": {"#": "searchingLabel"}
+                },
+                "localizations": {
+                    "value": {"_": "searching"}
+                }
+            }
 
     }</script>
 
@@ -103,7 +115,7 @@ POSSIBILITY OF SUCH DAMAGE.
         </form>
 
         <div class="searchArea">
-            <div class="loadingIndicator">Searching…</div>
+            <div data-montage-id="searchingLabel" class="loadingIndicator">Searching…</div>
 
             <div data-montage-id="searchResultsList" class="SearchResultsList">
                 <div data-montage-id="searchResult"></div>
