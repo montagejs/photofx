@@ -104,7 +104,7 @@ exports.PhotoInfoPanel = Montage.create(Component, {
 
     draw: {
         value: function() {
-            if (this._modifiedCanvas) {
+            if (this._modifiedCanvas && this._canvasWidth) {
                 var originalContext = this._modifiedCanvas.getContext("2d"),
                     originalData = originalContext.getImageData(0, 0, this._canvasWidth, this._canvasHeight);
 
