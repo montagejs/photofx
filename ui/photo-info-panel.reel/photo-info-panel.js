@@ -29,7 +29,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 var Montage = require("montage").Montage;
-var Component = require("montage/ui/component").Component;
+var Component = require("montage/ui/component").Component,
+    application = require("montage/ui/application").application;
 
 exports.PhotoInfoPanel = Montage.create(Component, {
 
@@ -74,7 +75,7 @@ exports.PhotoInfoPanel = Montage.create(Component, {
     prepareForDraw: {
         value: function() {
             this.element.addEventListener("mouseover", this, false);
-            document.application.addEventListener("imagemodified", this, false);
+            application.addEventListener("imagemodified", this, false);
         }
     },
 
