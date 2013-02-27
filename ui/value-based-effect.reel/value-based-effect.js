@@ -31,6 +31,7 @@ POSSIBILITY OF SUCH DAMAGE.
 var Montage = require("montage").Montage;
 var Component = require("montage/ui/component").Component;
 var undoManager = require("montage/core/undo-manager").defaultUndoManager;
+var Promise = require("montage/core/promise").Promise;
 
 exports.ValueBasedEffect = Montage.create(Component, {
 
@@ -74,7 +75,7 @@ exports.ValueBasedEffect = Montage.create(Component, {
         value: function(value) {
             var undoneValue = this._originalSliderValue ? this._originalSliderValue : this.sliderValue;
             if (this.sliderValue !== this._originalSliderValue) {
-                undoManager.add(this.name.toLowerCase() + " change", this._commitSliderValue, this, undoneValue);
+                undoManager.register(this.name.toLowerCase() + " change", Promise.resolve([this._commitSliderValue, this, undoneValue]));
             }
 
             if (typeof value !== "undefined") {

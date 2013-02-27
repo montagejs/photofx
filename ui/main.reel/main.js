@@ -35,7 +35,8 @@ var Montage = require("montage").Montage,
     Deserializer = require("montage/core/deserializer").Deserializer,
     defaultUndoManager = require("montage/core/undo-manager").defaultUndoManager,
     ArrayController = require("montage/ui/controller/array-controller").ArrayController,
-    LOCAL_STORAGE_KEY = "montage_photofx_state";
+    LOCAL_STORAGE_KEY = "montage_photofx_state",
+    Promise = require("montage/core/promise").Promise;
 
 exports.Main = Montage.create(Component, {
 
@@ -341,7 +342,7 @@ exports.Main = Montage.create(Component, {
             var photo = this.photoController.content[index];
             var undoLabel = 'remove photo "' + photo.title + '"';
 
-            this.undoManager.add(undoLabel, this.addPhotoAtIndex, this, photo, index);
+            this.undoManager.register(undoLabel, Promise.resolve([this.addPhotoAtIndex, this, photo, index]));
 
             this.photoController.removeObjects(photo);
         }
@@ -352,7 +353,7 @@ exports.Main = Montage.create(Component, {
 
             var undoLabel = 'add photo "' + photo.title + '"';
 
-            this.undoManager.add(undoLabel, this.removePhotoAtIndex, this, index);
+            this.undoManager.register(undoLabel, Promise.resolve([this.removePhotoAtIndex, this, index]));
 
             this.photoController.content.splice(index, 0, photo);
             this.photoController.selectedObjects = [photo];

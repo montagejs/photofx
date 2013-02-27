@@ -33,6 +33,7 @@ var Component = require("montage/ui/component").Component;
 var ArrayController = require("montage/ui/controller/array-controller").ArrayController;
 var PointMonitor = require("core/point-monitor").PointMonitor;
 var undoManager = require("montage/core/undo-manager").defaultUndoManager;
+var Promise = require("montage/core/promise").Promise;
 
 exports.ColorInfoPanel = Montage.create(Component, {
 
@@ -130,10 +131,7 @@ exports.ColorInfoPanel = Montage.create(Component, {
 
                 // Don't bother undoing a color pick that really wasn't a change
                 if (originalX !== x || originalY !== y) {
-
-                    // If the new x and y were null, this pickColor cleared a marker, label it as such
-                    var undoLabel = (null == x || null == y) ? "clear color marker" : "set color marker";
-                    undoManager.add(undoLabel, this.pickColor, this, monitor, originalX, originalY, null, true);
+                    undoManager.register("set marker location", Promise.resolve([this.pickColor, this, monitor, originalX, originalY, null, true]));
                 }
 
                 this._undoColorPickInfo = null;
@@ -193,7 +191,7 @@ exports.ColorInfoPanel = Montage.create(Component, {
 
             // TODO account for multiple addition undoing
             // don't assume it's the last one (or that it appears in organizedObjects at all)
-            undoManager.add("add color marker", this.removePointMonitors, this, [pointMonitors.organizedObjects.length - 1]);
+            undoManager.register("add color marker", Promise.resolve([this.removePointMonitors, this, [pointMonitors.organizedObjects.length - 1]]));
 
             if (undoManager.isUndoing) {
                 pointMonitors.selectObjectsOnAddition = true;
@@ -226,7 +224,7 @@ exports.ColorInfoPanel = Montage.create(Component, {
             }
 
             if (removedMonitors && removedMonitors.length > 0) {
-                undoManager.add("remove color marker", this.addPointMonitors, this, removedMonitors);
+                undoManager.register("remove color marker", Promise.resolve([this.addPointMonitors, this, removedMonitors]));
             }
 
         }
