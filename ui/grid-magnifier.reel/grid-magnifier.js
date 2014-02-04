@@ -32,6 +32,8 @@ var Montage = require("montage").Montage;
 var Component = require("montage/ui/component").Component;
 var dom = require("montage/ui/dom");
 var Point = require("montage/core/geometry/point").Point;
+var application = require("montage/ui/application").application;
+
 
 exports.GridMagnifier = Montage.create(Component, {
 
@@ -106,13 +108,13 @@ exports.GridMagnifier = Montage.create(Component, {
             this.grid = event.focusGrid;
             this.color = event.color;
 
-            document.application.addEventListener("colorpickend", this, false);
+            application.addEventListener("colorpickend", this, false);
         }
     },
 
     handleColorpickend: {
         value: function() {
-            document.application.removeEventListener("colorpickend", this, false);
+            application.removeEventListener("colorpickend", this, false);
             this._pageCenterX = null;
             this._pageCenterY = null;
             this.grid = null;
@@ -140,7 +142,7 @@ exports.GridMagnifier = Montage.create(Component, {
 
     prepareForDraw: {
         value: function() {
-            document.application.addEventListener("colorpick", this, false);
+            application.addEventListener("colorpick", this, false);
 
             // TODO this is a workaround for a problem with our deserialization in iOS concerning
             // canvas elements. Debugging points to some issue with adoptNode. Either way,
